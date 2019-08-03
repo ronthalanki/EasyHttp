@@ -19,9 +19,13 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
 public class EasyHttp {
+  private static final String BLANK_JSON_EXCEPTION_MESSAGE = "JSON is empty, null, or blank";
+  private static final String BLANK_PATH_EXCEPTION_MESSAGE = "Path is empty, null, or blank";
+  private static final String BLANK_EXCEPTION_MESSAGE = "String is empty, null, or blank";
   private final String baseUrl;
 
   public EasyHttp(String baseUrl) {
+    requireNotBlank(baseUrl, BLANK_EXCEPTION_MESSAGE);
     this.baseUrl = baseUrl;
   }
 
@@ -48,7 +52,7 @@ public class EasyHttp {
 
   public Response post(final URL url, final String payload) throws IOException {
     Objects.requireNonNull(url);
-    requireJsonNotBlank(payload);
+    requireNotBlank(payload, BLANK_JSON_EXCEPTION_MESSAGE);
 
     final HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setRequestMethod("POST");
@@ -72,7 +76,7 @@ public class EasyHttp {
 
   public Response put(final URL url, final String payload) throws IOException {
     Objects.requireNonNull(url);
-    requireJsonNotBlank(payload);
+    requireNotBlank(payload, BLANK_JSON_EXCEPTION_MESSAGE);
 
     final HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setRequestMethod("PUT");
@@ -96,7 +100,7 @@ public class EasyHttp {
 
   private void setupPayload(final HttpURLConnection con, final String payload) throws IOException {
     Objects.requireNonNull(con);
-    requireJsonNotBlank(payload);
+    requireNotBlank(payload, BLANK_JSON_EXCEPTION_MESSAGE);
 
     con.setRequestProperty("Content-Type", "application/json");
     final OutputStream os = con.getOutputStream();
@@ -122,14 +126,14 @@ public class EasyHttp {
   }
 
   public URL url(final String path) throws URISyntaxException, MalformedURLException {
-    requirePathNotBlank(path);
+    requireNotBlank(path, BLANK_PATH_EXCEPTION_MESSAGE);
 
     return url(path, Collections.emptyMap());
   }
 
   public URL url(final String path, final Map<String, Object> queryParams)
       throws URISyntaxException, MalformedURLException {
-    requirePathNotBlank(path);
+    requireNotBlank(path, BLANK_PATH_EXCEPTION_MESSAGE);
     Objects.requireNonNull(queryParams);
 
     final List<NameValuePair> nvps = new ArrayList<>();
@@ -142,15 +146,9 @@ public class EasyHttp {
     return new URIBuilder(baseUrl).setPath(path).setParameters(nvps).build().toURL();
   }
 
-  public static void requireJsonNotBlank(final String str) {
+  private static void requireNotBlank(final String str, final String message) {
     if (StringUtils.isBlank(str)) {
-      throw new IllegalArgumentException("JSON is empty, null, or blank");
-    }
-  }
-
-  public static void requirePathNotBlank(final String str) {
-    if (StringUtils.isBlank(str)) {
-      throw new IllegalArgumentException("Path is empty, null, or blank");
+      throw new IllegalArgumentException();
     }
   }
 }
