@@ -1,0 +1,43 @@
+plugins {
+    id 'checkstyle'
+    id 'java'
+    id 'com.diffplug.gradle.spotless' version '3.22.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        removeUnusedImports()
+    }
+}
+
+def reportsDir = "${buildDir}/reports";
+
+checkstyle {
+    toolVersion = '8.12'
+    configFile = rootProject.file('checkstyle.xml')
+}
+
+task checkstyle(type: Checkstyle) {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.destination = file("${reportsDir}/checkstyle")
+    }
+}
+
+checkstyleMain {
+    source = 'src/main/java'
+}
+
+checkstyleTest {
+    source = 'src/test/java'
+}
