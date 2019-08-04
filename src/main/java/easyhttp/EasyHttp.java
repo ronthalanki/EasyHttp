@@ -22,11 +22,18 @@ public class EasyHttp {
   private static final String BLANK_JSON_EXCEPTION_MESSAGE = "JSON is empty, null, or blank";
   private static final String BLANK_PATH_EXCEPTION_MESSAGE = "Path is empty, null, or blank";
   private static final String BLANK_EXCEPTION_MESSAGE = "String is empty, null, or blank";
+
   private final String baseUrl;
 
   public EasyHttp(String baseUrl) {
+    Objects.requireNonNull(baseUrl);
     requireNotBlank(baseUrl, BLANK_EXCEPTION_MESSAGE);
+
     this.baseUrl = baseUrl;
+  }
+
+  public String getBaseUrl() {
+    return baseUrl;
   }
 
   public Response get(final URL url) throws IOException {
@@ -52,6 +59,7 @@ public class EasyHttp {
 
   public Response post(final URL url, final String payload) throws IOException {
     Objects.requireNonNull(url);
+    Objects.requireNonNull(payload);
     requireNotBlank(payload, BLANK_JSON_EXCEPTION_MESSAGE);
 
     final HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -76,6 +84,7 @@ public class EasyHttp {
 
   public Response put(final URL url, final String payload) throws IOException {
     Objects.requireNonNull(url);
+    Objects.requireNonNull(payload);
     requireNotBlank(payload, BLANK_JSON_EXCEPTION_MESSAGE);
 
     final HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -100,6 +109,7 @@ public class EasyHttp {
 
   private void setupPayload(final HttpURLConnection con, final String payload) throws IOException {
     Objects.requireNonNull(con);
+    Objects.requireNonNull(payload);
     requireNotBlank(payload, BLANK_JSON_EXCEPTION_MESSAGE);
 
     con.setRequestProperty("Content-Type", "application/json");
@@ -126,6 +136,7 @@ public class EasyHttp {
   }
 
   public URL url(final String path) throws URISyntaxException, MalformedURLException {
+    Objects.requireNonNull(path);
     requireNotBlank(path, BLANK_PATH_EXCEPTION_MESSAGE);
 
     return url(path, Collections.emptyMap());
@@ -133,6 +144,7 @@ public class EasyHttp {
 
   public URL url(final String path, final Map<String, Object> queryParams)
       throws URISyntaxException, MalformedURLException {
+    Objects.requireNonNull(path);
     requireNotBlank(path, BLANK_PATH_EXCEPTION_MESSAGE);
     Objects.requireNonNull(queryParams);
 
