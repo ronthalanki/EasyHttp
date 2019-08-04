@@ -157,7 +157,7 @@ public class EasyHttp {
 
   private static void requireNotBlank(final String str, final String message) {
     if (StringUtils.isBlank(str)) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(message);
     }
   }
 }
