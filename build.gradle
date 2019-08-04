@@ -11,12 +11,21 @@ repositories {
 dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.9'
     compile 'org.apache.commons:commons-lang3:3.0'
+
+    testCompile 'org.assertj:assertj-core:3.13.1'
+    testCompile 'junit:junit:4.12'
 }
 
 spotless {
     java {
         googleJavaFormat()
         removeUnusedImports()
+    }
+}
+
+task testUnit(type: Test) {
+    useJUnit {
+        includeCategories 'marquez.UnitTests'
     }
 }
 

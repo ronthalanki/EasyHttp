@@ -136,9 +136,6 @@ public class EasyHttp {
   }
 
   public URL url(final String path) throws URISyntaxException, MalformedURLException {
-    Objects.requireNonNull(path);
-    requireNotBlank(path, BLANK_PATH_EXCEPTION_MESSAGE);
-
     return url(path, Collections.emptyMap());
   }
 
